@@ -11,37 +11,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import dev.samu.bladerecycle.data.AppDatabase
+import dev.samu.bladerecycle.data.BookmarkDao
 import dev.samu.bladerecycle.ui.theme.BladeRecycleTheme
+import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
+import dev.samu.bladerecycle.viewmodel.BookmarkViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val bookmarkDao: BookmarkDao = AppDatabase.getDatabase(applicationContext).bookmarkDao()
+        val bookmarkTypeDao = AppDatabase.getDatabase(applicationContext).bookmarkTypeDao()
+
+        val viewModel = ViewModelProvider(
+            this,
+            BookmarkViewModelFactory(bookmarkDao, bookmarkTypeDao)
+        )[BookmarkViewModel::class.java]
+
         setContent {
-            BladeRecycleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            // Pantalla no creada aún
+            BookmarkListScreen(viewModel = viewModel)
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BladeRecycleTheme {
-        Greeting("Android")
     }
 }
