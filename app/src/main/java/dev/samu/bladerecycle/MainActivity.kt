@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.samu.bladerecycle.data.AppDatabase
 import dev.samu.bladerecycle.data.BookmarkDao
 import dev.samu.bladerecycle.ui.theme.BladeRecycleTheme
+import dev.samu.bladerecycle.view.FirstScreen
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModelFactory
 
@@ -31,8 +32,7 @@ class MainActivity : ComponentActivity() {
         )[BookmarkViewModel::class.java]
 
         setContent {
-            // Pantalla no creada aún
-            BookmarkListScreen(viewModel = viewModel)
+            FirstScreen(viewModel = viewModel)
         }
     }
 }
