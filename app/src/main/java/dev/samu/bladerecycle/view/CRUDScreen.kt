@@ -23,7 +23,7 @@ import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
 import dev.samu.tareas.navigation.AppScreens
 
 @Composable
-fun FirstScreen(
+fun CRUDScreen(
     database: AppDatabase,
     viewModel: BookmarkViewModel,
     navController: NavHostController
@@ -305,30 +305,30 @@ fun FirstScreen(
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Edit, "Menú", tint = Color.White) },
                     label = { Text("Menú", color = Color.White) },
-                    selected = currentRoute == AppScreens.FirstScreen.route,
+                    selected = currentRoute == AppScreens.CRUDScreen.route,
                     onClick = {
-                        if (currentRoute != AppScreens.FirstScreen.route) {
-                            navController.navigate(AppScreens.FirstScreen.route)
+                        if (currentRoute != AppScreens.CRUDScreen.route) {
+                            navController.navigate(AppScreens.CRUDScreen.route)
                         }
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.LocationOn, "Mapa", tint = Color.White) },
                     label = { Text("Mapa", color = Color.White) },
-                    selected = currentRoute == AppScreens.SecondScreen.route,
+                    selected = currentRoute == AppScreens.MapaScreen.route,
                     onClick = {
-                        if (currentRoute != AppScreens.SecondScreen.route) {
-                            navController.navigate(AppScreens.SecondScreen.route)
+                        if (currentRoute != AppScreens.MapaScreen.route) {
+                            navController.navigate(AppScreens.MapaScreen.route)
                         }
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.Info, "Mapa", tint = Color.White) },
-                    label = { Text("Mapa", color = Color.White) },
-                    selected = currentRoute == AppScreens.SecondScreen.route,
+                    icon = { Icon(Icons.Filled.Info, "Info", tint = Color.White) },
+                    label = { Text("Info", color = Color.White) },
+                    selected = currentRoute == AppScreens.EnergiaEolicaScreen.route,
                     onClick = {
-                        if (currentRoute != AppScreens.SecondScreen.route) {
-                            navController.navigate(AppScreens.SecondScreen.route)
+                        if (currentRoute != AppScreens.EnergiaEolicaScreen.route) {
+                            navController.navigate(AppScreens.EnergiaEolicaScreen.route)
                         }
                     }
                 )
