@@ -73,7 +73,7 @@ fun EnergiaEolicaScreen(
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()){
             LazyColumn(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues).padding(bottom = 100.dp)
             ) {
                 item { WelcomeHeader() }
                 item { StatisticsSection() }
