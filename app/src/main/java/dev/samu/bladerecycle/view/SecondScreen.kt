@@ -105,7 +105,7 @@ fun MyMapView(
         geoPoint = if (bookmarks.isNotEmpty()) {
             GeoPoint(bookmarks[0].coordinatesX, bookmarks[0].coordinatesY)
         } else {
-            GeoPoint(28.957627225693827, -13.553854217297525)
+            GeoPoint(28.95402190965022, -13.59178437323861)
         }
         zoom = 17.0
     }
