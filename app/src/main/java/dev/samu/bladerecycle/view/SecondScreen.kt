@@ -11,8 +11,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,21 +22,18 @@ import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
 import dev.samu.tareas.navigation.AppScreens
 
 @Composable
-fun FirstScreen(
+fun SecondScreen(
     viewModel: BookmarkViewModel,
     database: AppDatabase,
     navController: NavHostController
 ){
-    val bookmarks by viewModel.bookmarks.collectAsState()
-    val bookmarkstype by viewModel.bookmarkstype.collectAsState()
+    Text(text = "Segunda pantalla")
 
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     Box(
         modifier = Modifier.fillMaxSize()
     ){
-        Text(text = "Hola")
-
         BottomAppBar(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
