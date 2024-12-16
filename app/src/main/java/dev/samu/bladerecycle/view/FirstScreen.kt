@@ -1,12 +1,13 @@
 package dev.samu.bladerecycle.view
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,15 +39,21 @@ fun FirstScreen(
     var bookmarkY by remember { mutableStateOf("") }
     var bookmarkTypeName by remember { mutableStateOf("") }
 
-    val scrollState = rememberScrollState() // Create a scroll state
+    // State for Dialog visibility and editing
+    var showDialog by remember { mutableStateOf(false) }
+    var showTypeDialog by remember { mutableStateOf(false) }
+    var isEditingBookmark by remember { mutableStateOf(false) }
+    var isEditingType by remember { mutableStateOf(false) }
+    var currentBookmark: Bookmark? by remember { mutableStateOf(null) }
+    var currentType: BookmarkType? by remember { mutableStateOf(null) }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    val scrollState = rememberScrollState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .verticalScroll(scrollState) // Apply verticalScroll with the scrollState
+                .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
             // Add new Bookmark
@@ -79,21 +86,15 @@ fun FirstScreen(
             Button(
                 onClick = {
                     if (bookmarkTitle.isNotEmpty() && bookmarkX.isNotEmpty() && bookmarkY.isNotEmpty() && bookmarkTypeName.isNotEmpty()) {
-                        // Find the bookmark type by name
                         val type = bookmarkstype.find { it.name == bookmarkTypeName }
-
-                        // Add bookmark only if the type exists
                         if (type != null) {
                             val newBookmark = Bookmark(
                                 title = bookmarkTitle,
                                 coordinatesX = bookmarkX.toDouble(),
                                 coordinatesY = bookmarkY.toDouble(),
-                                typeId = type.id // Use the ID of the found type
+                                typeId = type.id
                             )
                             viewModel.addBookmark(newBookmark)
-                        } else {
-                            // Handle case where type doesn't exist
-                            // For example, you can show an error message or create a new type
                         }
                     }
                 },
@@ -116,7 +117,6 @@ fun FirstScreen(
             Button(
                 onClick = {
                     if (bookmarkTypeName.isNotEmpty()) {
-                        // Add bookmark type
                         val newType = BookmarkType(name = bookmarkTypeName)
                         viewModel.addBookmarkType(newType)
                     }
@@ -131,18 +131,172 @@ fun FirstScreen(
             // List of bookmarks
             Text("Lista de Marcadores:", style = MaterialTheme.typography.bodyLarge)
             bookmarks.forEach { bookmark ->
-                Text(text = "Marcador: ${bookmark.title} (${bookmark.coordinatesX}, ${bookmark.coordinatesY})")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp), // Añadir espacio entre las filas
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Mostrar el título del marcador y sus coordenadas
+                    Text(
+                        text = "Marcador: ${bookmark.title} (${bookmark.coordinatesX}, ${bookmark.coordinatesY})",
+                        modifier = Modifier.weight(1f) // Ocupa el máximo espacio disponible
+                    )
+
+                    // Mostrar los iconos de editar y eliminar con un espaciado adecuado
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Añadir espacio entre iconos
+                    ) {
+                        IconButton(onClick = {
+                            // Set current bookmark for editing
+                            currentBookmark = bookmark
+                            isEditingBookmark = true
+                            bookmarkTitle = bookmark.title
+                            bookmarkX = bookmark.coordinatesX.toString()
+                            bookmarkY = bookmark.coordinatesY.toString()
+                            bookmarkTypeName = bookmarkstype.find { it.id == bookmark.typeId }?.name.orEmpty()
+                            showDialog = true
+                        }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "Editar Marcador")
+                        }
+                        IconButton(onClick = {
+                            // Delete the bookmark
+                            viewModel.deleteBookmark(bookmark)
+                        }) {
+                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar Marcador")
+                        }
+                    }
+                }
             }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // List of bookmark types
             Text("Lista de Tipos de Marcadores:", style = MaterialTheme.typography.bodyLarge)
             bookmarkstype.forEach { type ->
-                Text(text = "Tipo: ${type.name}")
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Tipo: ${type.name}")
+                    Row {
+                        IconButton(onClick = {
+                            // Set current type for editing
+                            currentType = type
+                            bookmarkTypeName = type.name
+                            isEditingType = true
+                            showTypeDialog = true
+                        }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "Editar Tipo de Marcador")
+                        }
+                        IconButton(onClick = {
+                            viewModel.deleteBookmarkType(type)
+                        }) {
+                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar Tipo de Marcador")
+                        }
+                    }
+                }
             }
         }
 
+        // Dialog for Editing Bookmark
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Editar Marcador") },
+                text = {
+                    Column {
+                        TextField(
+                            value = bookmarkTitle,
+                            onValueChange = { bookmarkTitle = it },
+                            label = { Text("Título del marcador") },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        )
+                        TextField(
+                            value = bookmarkX,
+                            onValueChange = { bookmarkX = it },
+                            label = { Text("Coordenada X") },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        )
+                        TextField(
+                            value = bookmarkY,
+                            onValueChange = { bookmarkY = it },
+                            label = { Text("Coordenada Y") },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        )
+                        TextField(
+                            value = bookmarkTypeName,
+                            onValueChange = { bookmarkTypeName = it },
+                            label = { Text("Tipo de Marcador") },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            currentBookmark?.let {
+                                val updatedBookmark = it.copy(
+                                    title = bookmarkTitle,
+                                    coordinatesX = bookmarkX.toDouble(),
+                                    coordinatesY = bookmarkY.toDouble(),
+                                    typeId = bookmarkstype.find { it.name == bookmarkTypeName }?.id ?: it.typeId
+                                )
+                                viewModel.updateBookmark(updatedBookmark)
+                            }
+                            showDialog = false
+                        }
+                    ) {
+                        Text("Guardar Cambios")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showDialog = false }
+                    ) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+
+        // Dialog for Editing Bookmark Type
+        if (showTypeDialog) {
+            AlertDialog(
+                onDismissRequest = { showTypeDialog = false },
+                title = { Text("Editar Tipo de Marcador") },
+                text = {
+                    Column {
+                        TextField(
+                            value = bookmarkTypeName,
+                            onValueChange = { bookmarkTypeName = it },
+                            label = { Text("Nombre del Tipo de Marcador") },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            currentType?.let {
+                                val updatedType = it.copy(name = bookmarkTypeName)
+                                viewModel.updateBookmarkType(updatedType)
+                            }
+                            showTypeDialog = false
+                        }
+                    ) {
+                        Text("Guardar Cambios")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showTypeDialog = false }
+                    ) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+
+        // BottomAppBar with Navigation
         BottomAppBar(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -155,6 +309,16 @@ fun FirstScreen(
                     onClick = {
                         if (currentRoute != AppScreens.FirstScreen.route) {
                             navController.navigate(AppScreens.FirstScreen.route)
+                        }
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.LocationOn, "Mapa", tint = Color.White) },
+                    label = { Text("Mapa", color = Color.White) },
+                    selected = currentRoute == AppScreens.SecondScreen.route,
+                    onClick = {
+                        if (currentRoute != AppScreens.SecondScreen.route) {
+                            navController.navigate(AppScreens.SecondScreen.route)
                         }
                     }
                 )
