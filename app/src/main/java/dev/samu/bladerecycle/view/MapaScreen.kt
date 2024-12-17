@@ -54,16 +54,26 @@ fun MapaScreen(
     viewModel: BookmarkViewModel,
     database: AppDatabase,
     navController: NavHostController
-){
-    val bookmarks by viewModel.bookmarks.collectAsState()
-    val bookmarkstype by viewModel.bookmarkstype.collectAsState()
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+) {
+    var currentScreen by remember { mutableStateOf("MapaScreen") }
 
-    MyMapView(bookmarks, bookmarkstype)
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (currentScreen) {
+            "CRUDScreen" -> {
+                CRUDScreen(database = database, viewModel = viewModel, navController)
+            }
+            "MapaScreen" -> {
+                MyMapView(
+                    bookmarks = viewModel.bookmarks.collectAsState().value,
+                    bookmarkType = viewModel.bookmarkstype.collectAsState().value
+                )
+            }
+            "EnergiaEolicaScreen" -> {
+                EnergiaEolicaScreen(navController)
+            }
+        }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ){
+        // BottomAppBar para cambiar de pantalla
         BottomAppBar(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -72,31 +82,25 @@ fun MapaScreen(
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Edit, "Menú", tint = Color.White) },
                     label = { Text("Menú", color = Color.White) },
-                    selected = currentRoute == AppScreens.CRUDScreen.route,
+                    selected = currentScreen == "CRUDScreen",
                     onClick = {
-                        if (currentRoute != AppScreens.CRUDScreen.route) {
-                            navController.navigate(AppScreens.CRUDScreen.route)
-                        }
+                        currentScreen = "CRUDScreen" // Cambia la pantalla actual
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.LocationOn, "Mapa", tint = Color.White) },
                     label = { Text("Mapa", color = Color.White) },
-                    selected = currentRoute == AppScreens.MapaScreen.route,
+                    selected = currentScreen == "MapaScreen",
                     onClick = {
-                        if (currentRoute != AppScreens.MapaScreen.route) {
-                            navController.navigate(AppScreens.MapaScreen.route)
-                        }
+                        currentScreen = "MapaScreen" // Cambia la pantalla actual
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Info, "Info", tint = Color.White) },
                     label = { Text("Info", color = Color.White) },
-                    selected = currentRoute == AppScreens.EnergiaEolicaScreen.route,
+                    selected = currentScreen == "EnergiaEolicaScreen",
                     onClick = {
-                        if (currentRoute != AppScreens.EnergiaEolicaScreen.route) {
-                            navController.navigate(AppScreens.EnergiaEolicaScreen.route)
-                        }
+                        currentScreen = "EnergiaEolicaScreen" // Cambia la pantalla actual
                     }
                 )
             },
@@ -104,6 +108,7 @@ fun MapaScreen(
         )
     }
 }
+
 
 @Composable
 fun MyMapView(
