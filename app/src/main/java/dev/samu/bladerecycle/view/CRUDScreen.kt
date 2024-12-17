@@ -57,11 +57,11 @@ fun CRUDScreen(
                 .padding(16.dp)
         ) {
             // Add new Bookmark
-            Text("Agregar un Marcador:", style = MaterialTheme.typography.bodyLarge)
+            Text("Agregar un local:", style = MaterialTheme.typography.bodyLarge)
             TextField(
                 value = bookmarkTitle,
                 onValueChange = { bookmarkTitle = it },
-                label = { Text("Título del marcador") },
+                label = { Text("Título del local") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             TextField(
@@ -79,7 +79,7 @@ fun CRUDScreen(
             TextField(
                 value = bookmarkTypeName,
                 onValueChange = { bookmarkTypeName = it },
-                label = { Text("Nombre del Tipo de Marcador") },
+                label = { Text("Nombre del Tipo de local") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
 
@@ -100,17 +100,17 @@ fun CRUDScreen(
                 },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
-                Text("Agregar Marcador")
+                Text("Agregar local")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Add new Bookmark Type
-            Text("Agregar un Tipo de Marcador:", style = MaterialTheme.typography.bodyLarge)
+            Text("Agregar un Tipo de local:", style = MaterialTheme.typography.bodyLarge)
             TextField(
                 value = bookmarkTypeName,
                 onValueChange = { bookmarkTypeName = it },
-                label = { Text("Nombre del Tipo de Marcador") },
+                label = { Text("Nombre del Tipo de local") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
 
@@ -123,13 +123,13 @@ fun CRUDScreen(
                 },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
-                Text("Agregar Tipo de Marcador")
+                Text("Agregar Tipo de local")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // List of bookmarks
-            Text("Lista de Marcadores:", style = MaterialTheme.typography.bodyLarge)
+            Text("Lista de local:", style = MaterialTheme.typography.bodyLarge)
             bookmarks.forEach { bookmark ->
                 Row(
                     modifier = Modifier
@@ -139,7 +139,7 @@ fun CRUDScreen(
                 ) {
                     // Mostrar el título del marcador y sus coordenadas
                     Text(
-                        text = "Marcador: ${bookmark.title} (${bookmark.coordinatesX}, ${bookmark.coordinatesY})",
+                        text = "Local: ${bookmark.title} (${bookmark.coordinatesX}, ${bookmark.coordinatesY})",
                         modifier = Modifier.weight(1f) // Ocupa el máximo espacio disponible
                     )
 
@@ -157,13 +157,13 @@ fun CRUDScreen(
                             bookmarkTypeName = bookmarkstype.find { it.id == bookmark.typeId }?.name.orEmpty()
                             showDialog = true
                         }) {
-                            Icon(Icons.Filled.Edit, contentDescription = "Editar Marcador")
+                            Icon(Icons.Filled.Edit, contentDescription = "Editar local")
                         }
                         IconButton(onClick = {
                             // Delete the bookmark
                             viewModel.deleteBookmark(bookmark)
                         }) {
-                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar Marcador")
+                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar local")
                         }
                     }
                 }
@@ -173,7 +173,7 @@ fun CRUDScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // List of bookmark types
-            Text("Lista de Tipos de Marcadores:", style = MaterialTheme.typography.bodyLarge)
+            Text("Lista de Tipos de locales:", style = MaterialTheme.typography.bodyLarge)
             bookmarkstype.forEach { type ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(text = "Tipo: ${type.name}")
@@ -185,12 +185,12 @@ fun CRUDScreen(
                             isEditingType = true
                             showTypeDialog = true
                         }) {
-                            Icon(Icons.Filled.Edit, contentDescription = "Editar Tipo de Marcador")
+                            Icon(Icons.Filled.Edit, contentDescription = "Editar Tipo de local")
                         }
                         IconButton(onClick = {
                             viewModel.deleteBookmarkType(type)
                         }) {
-                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar Tipo de Marcador")
+                            Icon(Icons.Filled.Delete, contentDescription = "Eliminar Tipo de local")
                         }
                     }
                 }
@@ -201,13 +201,13 @@ fun CRUDScreen(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Editar Marcador") },
+                title = { Text("Editar local") },
                 text = {
                     Column {
                         TextField(
                             value = bookmarkTitle,
                             onValueChange = { bookmarkTitle = it },
-                            label = { Text("Título del marcador") },
+                            label = { Text("Título del local") },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         )
                         TextField(
@@ -225,7 +225,7 @@ fun CRUDScreen(
                         TextField(
                             value = bookmarkTypeName,
                             onValueChange = { bookmarkTypeName = it },
-                            label = { Text("Tipo de Marcador") },
+                            label = { Text("Tipo de local") },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         )
                     }
@@ -262,13 +262,13 @@ fun CRUDScreen(
         if (showTypeDialog) {
             AlertDialog(
                 onDismissRequest = { showTypeDialog = false },
-                title = { Text("Editar Tipo de Marcador") },
+                title = { Text("Editar Tipo de local") },
                 text = {
                     Column {
                         TextField(
                             value = bookmarkTypeName,
                             onValueChange = { bookmarkTypeName = it },
-                            label = { Text("Nombre del Tipo de Marcador") },
+                            label = { Text("Nombre del Tipo de local") },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         )
                     }
