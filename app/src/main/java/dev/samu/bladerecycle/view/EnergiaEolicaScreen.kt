@@ -50,8 +50,6 @@ import dev.samu.tareas.navigation.AppScreens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnergiaEolicaScreen(
-    database: AppDatabase,
-    viewModel: BookmarkViewModel,
     navController: NavHostController
 ) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -340,14 +338,6 @@ private fun ContactSection() {
             ) {
                 Text("Registrate ahora")
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Lista de empresas registradas:",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
         }
     }
 }

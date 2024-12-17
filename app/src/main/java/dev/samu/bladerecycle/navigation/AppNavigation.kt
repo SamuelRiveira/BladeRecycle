@@ -11,8 +11,10 @@ import dev.samu.bladerecycle.view.CRUDScreen
 import dev.samu.bladerecycle.view.EnergiaEolicaScreen
 import dev.samu.bladerecycle.view.MapaScreen
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
+import dev.samu.bladerecycle.viewmodel.EmpresaViewModel
+
 @Composable
-fun AppNavigation(modifier: Modifier, viewModel: BookmarkViewModel, database: AppDatabase){
+fun AppNavigation(modifier: Modifier, viewModel: BookmarkViewModel, empresaViewModel: EmpresaViewModel, database: AppDatabase){
     // estado de gestion de navegación
     val navController = rememberNavController()
 
@@ -27,7 +29,7 @@ fun AppNavigation(modifier: Modifier, viewModel: BookmarkViewModel, database: Ap
         }
         composable(route = AppScreens.EnergiaEolicaScreen.route) {
             Log.d("Prueba", "Lleva a la ruta")
-            EnergiaEolicaScreen(navController = navController, viewModel = viewModel, database = database)
+            EnergiaEolicaScreen(navController = navController)
         }
     }
 }

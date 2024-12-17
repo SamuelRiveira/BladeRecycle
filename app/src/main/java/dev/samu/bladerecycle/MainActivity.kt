@@ -9,6 +9,8 @@ import dev.samu.bladerecycle.data.AppDatabase
 import dev.samu.bladerecycle.data.BookmarkDao
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModelFactory
+import dev.samu.bladerecycle.viewmodel.EmpresaViewModel
+import dev.samu.bladerecycle.viewmodel.EmpresaViewModelFactory
 import dev.samu.tareas.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
@@ -18,21 +20,30 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        database = AppDatabase.Companion.getDatabase(this)
-        val bookmarkDao: BookmarkDao = AppDatabase.getDatabase(applicationContext).bookmarkDao()
-        val bookmarkTypeDao = AppDatabase.getDatabase(applicationContext).bookmarkTypeDao()
+        database = AppDatabase.getDatabase(this)
 
-        val viewModel = ViewModelProvider(
+        val bookmarkDao: BookmarkDao = database.bookmarkDao()
+        val bookmarkTypeDao = database.bookmarkTypeDao()
+        val empresaDao = database.empresaDao()
+
+        val bookmarkViewModel = ViewModelProvider(
             this,
             BookmarkViewModelFactory(bookmarkDao, bookmarkTypeDao)
         )[BookmarkViewModel::class.java]
 
+        val empresaViewModel = ViewModelProvider(
+            this,
+            EmpresaViewModelFactory(empresaDao)
+        )[EmpresaViewModel::class.java]
+
         setContent {
             AppNavigation(
                 modifier = Modifier,
-                viewModel = viewModel,
-                database
+                viewModel = bookmarkViewModel,
+                empresaViewModel = empresaViewModel,
+                database = database
             )
         }
     }
+
 }
