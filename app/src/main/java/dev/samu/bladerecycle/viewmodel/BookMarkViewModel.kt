@@ -24,8 +24,36 @@ class BookmarkViewModel(
     val bookmarkstype: MutableStateFlow<List<BookmarkType>> get() = _bookmarkstype
 
     init {
-        loadBookmarks()
-        loadBookmarkTypes()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                preloadBookmarkTypes()
+                preloadBookmarks()
+            }
+            loadBookmarkTypes()
+            loadBookmarks()
+        }
+    }
+
+    private suspend fun preloadBookmarkTypes() {
+        if (bookmarkTypeDao.getAllBookmarkTypesAsList().isEmpty()) {
+            bookmarkTypeDao.insert(BookmarkType(name = "Punto de Reciclaje"))
+        }
+    }
+
+    private suspend fun preloadBookmarks() {
+        if (bookmarkDao.getAllBookmarksAsList().isEmpty()) {
+            val defaultType = bookmarkTypeDao.getAllBookmarkTypesAsList().firstOrNull()
+            defaultType?.let {
+                bookmarkDao.insert(
+                    Bookmark(
+                        title = "Planta de reciclaje central",
+                        coordinatesX = 28.954412909075142,
+                        coordinatesY = -13.591357429110356,
+                        typeId = it.id
+                    )
+                )
+            }
+        }
     }
 
     private fun loadBookmarks() {
