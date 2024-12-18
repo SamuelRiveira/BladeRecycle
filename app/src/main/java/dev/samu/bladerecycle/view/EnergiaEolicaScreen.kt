@@ -43,8 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.samu.bladerecycle.R
-import dev.samu.bladerecycle.data.AppDatabase
-import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
 import dev.samu.tareas.navigation.AppScreens
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.utsman.osmandcompose.DefaultMapProperties
 import com.utsman.osmandcompose.Marker
 import com.utsman.osmandcompose.OpenStreetMap
@@ -44,7 +43,6 @@ import dev.samu.bladerecycle.data.AppDatabase
 import dev.samu.bladerecycle.data.Bookmark
 import dev.samu.bladerecycle.data.BookmarkType
 import dev.samu.bladerecycle.viewmodel.BookmarkViewModel
-import dev.samu.tareas.navigation.AppScreens
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import dev.samu.bladerecycle.R

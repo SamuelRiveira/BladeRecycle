@@ -1,4 +1,4 @@
-package dev.samu.bladerecycle.ui.theme
+package dev.samu.bladerecycle.view.theme
 
 import androidx.compose.ui.graphics.Color
 
